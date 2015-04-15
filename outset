@@ -227,9 +227,10 @@ def process_items(path, delete_items=False, once=False):
         sys.exit(1)
     for f in os.listdir(path):
         pathname = os.path.join(path, f)
+        logging.info('Pathname: %s' % pathname)
         if os.path.isdir(pathname):
         	if os.path.basename(pathname) == get_username():
-        		logginginfo('Found current user: %s' % get_username())
+        		logging.info('Found current user: %s' % get_username())
 				# recursion!
         		process_items(pathname, delete_items, once)
         if check_perms(pathname):
