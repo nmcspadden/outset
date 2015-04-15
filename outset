@@ -34,6 +34,7 @@ import socket
 import time
 import plistlib
 import datetime
+import pwd
 from stat import *
 
 outset_dir = '/usr/local/outset'
@@ -214,6 +215,10 @@ def run_script(pathname):
             logging.error('Failure processing %s: %s' % (pathname, err))
     except OSError:
         logging.error('Failure processing %s: %s' % (pathname, OSError))
+        
+def get_username():
+	'''Get the current logged in username.'''
+	return pwd.getpwuid(os.getuid())[0]
 
 def process_items(path, delete_items=False, once=False):
     '''Processes scripts/packages to run once at first boot'''
@@ -222,6 +227,11 @@ def process_items(path, delete_items=False, once=False):
         sys.exit(1)
     for f in os.listdir(path):
         pathname = os.path.join(path, f)
+        if os.path.isdir(pathname):
+        	if os.path.basename(pathname) == get_username():
+        		logginginfo('Found current user: %s' % get_username())
+				# recursion!
+        		process_items(pathname, delete_items, once)
         if check_perms(pathname):
             if pathname.lower().endswith(('py', 'rb', 'sh')):
                 if once:
