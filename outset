@@ -57,26 +57,12 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',
                     level=logging.DEBUG,
                     filename=log_file)
 
-def network_up():
-    '''Returns True if network is up'''
-    cmd = ['/sbin/ifconfig', '-a', 'inet']
+def wait_for_network():
+    '''Courtesy of https://wikispaces.psu.edu/display/clcmaclinuxwikipublic/First+Boot+Script'''
+    cmd = ['/usr/sbin/scutil', '-w', 'State:/Network/Global/DNS', '-t', '180']
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, 
                                 stderr=subprocess.PIPE)
     (out, err) = proc.communicate()
-    for line in str(out).splitlines():
-        if 'inet' in line:
-            if not line.split()[1] in ['127.0.0.1', '0.0.0.0']:
-                return True
-    return False
-
-def wait_for_network():
-    '''Waits for a valid IP before continuing'''
-    while True:
-        if network_up():
-            break
-        else:
-            logging.info('Waiting for network')
-            time.sleep(10)
 
 def disable_loginwindow():
     '''Disables the loginwindow process'''
