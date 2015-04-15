@@ -1,7 +1,7 @@
 outset
 ======
 
-This script automatically processes packages and scripts at first boot and/or each (subsequent) user login. 
+This script automatically processes packages, profiles, and scripts at first boot and/or each (subsequent) user login. 
 
 Requirements
 ------------
@@ -24,7 +24,7 @@ For testing purposes, one could manually run the command from the same directory
 	/Library/LaunchDaemons/com.github.outset.boot.plist
 	/Library/LaunchAgents/com.github.outset.login.plist
 
-The first launchd job above runs any scripts and packages you'd like to have processed at first or every boot. You pass scripts and packages to the launchd job by placing them in the corresponding directories listed below. Scripts in everyboot-scripts will run at each boot. Scripts/packages in firstboot-scripts/packages will self-destruct after completion (this is for firstboot packages and configuration scripts that you only want to run once):
+The first launchd job above runs any packages, profiles, and scripts you'd like to have processed at first or every boot. You pass packages, profiles, and scripts to the launchd job by placing them in the corresponding directories listed below. Profiles should go in "-packages" folders as well. Scripts in everyboot-scripts will run at each boot. Scripts/packages/profiles in firstboot-scripts/packages will self-destruct after completion (this is for firstboot packages and configuration scripts that you only want to run once):
 
 	/usr/local/outset/firstboot-packages
 	/usr/local/outset/firstboot-scripts
@@ -45,6 +45,10 @@ Logging
 Note: When testing, make sure all pkgs or scripts you populate in directories controlled by outset have root ownership, and should be in the wheel group with 755 permissions.
 
 	sudo chown root:wheel /usr/local/outset && chmod -R 755 /usr/local/outset
+	
+Exception: Configuration profiles (.mobileconfig) should have permissions 644:
+
+	sudo find /usr/local/outset -name *.mobileconfig -exec chmod 0644 {} \;
 
 Configuration
 -------------
