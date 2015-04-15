@@ -232,7 +232,9 @@ def process_items(path, delete_items=False, once=False):
         	if os.path.basename(pathname) == get_username():
         		logging.info('Found current user: %s' % get_username())
 				# recursion!
-        		process_items(pathname, delete_items, once)
+        		#process_items(pathname, delete_items, once)
+        		#figure out some way to process this folder and then STOP
+        		# maybe move this inside the check_perms if?
         if check_perms(pathname):
             if pathname.lower().endswith(('py', 'rb', 'sh')):
                 if once:
